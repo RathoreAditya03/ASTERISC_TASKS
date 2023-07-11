@@ -1,0 +1,120 @@
+import java.util.*;
+
+class Vehicle {
+    private String licensePlate;
+    private String model;
+
+    public Vehicle(String licensePlate, String model) {
+        this.licensePlate = licensePlate;
+        this.model = model;
+    }
+
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    @Override
+    public String toString() {
+        return "License Plate: " + licensePlate + ", Model: " + model;
+    }
+}
+
+class ParkingSlot {
+    private List<Vehicle> parkedVehicles;
+    private int capacity;
+
+    public ParkingSlot(int capacity) {
+        this.parkedVehicles = new ArrayList<>();
+        this.capacity = capacity;
+    }
+
+    public boolean isFull() {
+        return parkedVehicles.size() == capacity;
+    }
+
+    public void parkVehicle(Vehicle vehicle) {
+        parkedVehicles.add(vehicle);
+        System.out.println("Vehicle parked successfully!");
+    }
+
+    public void removeVehicle(String licensePlate) {
+        for (Vehicle vehicle : parkedVehicles) {
+            if (vehicle.getLicensePlate().equals(licensePlate)) {
+                parkedVehicles.remove(vehicle);
+                System.out.println("Vehicle removed successfully!");
+                return;
+            }
+        }
+        System.out.println("Vehicle not found in the parking slot.");
+    }
+
+    public void displayParkedVehicles() {
+        if (parkedVehicles.isEmpty()) {
+            System.out.println("No vehicles parked in the slot.");
+            return;
+        }
+
+        System.out.println("Parked Vehicles:");
+        for (Vehicle vehicle : parkedVehicles) {
+            System.out.println(vehicle.toString());
+        }
+    }
+}
+
+public class ParkingScheduler {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter parking slot capacity: ");
+        int capacity = scanner.nextInt();
+        ParkingSlot parkingSlot = new ParkingSlot(capacity);
+
+        boolean exit = false;
+        while (!exit) {
+            System.out.println("\n--- Parking Scheduler Menu ---");
+            System.out.println("1. Park a vehicle");
+            System.out.println("2. Remove a vehicle");
+            System.out.println("3. Display parked vehicles");
+            System.out.println("4. Exit");
+
+            System.out.print("\nEnter your choice (1-4): ");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    scanner.nextLine(); // Consume the newline character
+                    System.out.print("Enter license plate number: ");
+                    String licensePlate = scanner.nextLine();
+                    System.out.print("Enter model of the vehicle: ");
+                    String model = scanner.nextLine();
+
+                    Vehicle vehicle = new Vehicle(licensePlate, model);
+                    if (parkingSlot.isFull()) {
+                        System.out.println("Parking slot is full. Cannot park the vehicle.");
+                    } else {
+                        parkingSlot.parkVehicle(vehicle);
+                    }
+                    break;
+                case 2:
+                    scanner.nextLine(); // Consume the newline character
+                    System.out.print("Enter license plate number of the vehicle to remove: ");
+                    licensePlate = scanner.nextLine();
+                    parkingSlot.removeVehicle(licensePlate);
+                    break;
+                case 3:
+                    parkingSlot.displayParkedVehicles();
+                    break;
+                case 4:
+                    exit = true;
+                    System.out.println("Thank you for using parking schedular...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a number from 1 to 4.");
+            }
+        }
+    }
+}
